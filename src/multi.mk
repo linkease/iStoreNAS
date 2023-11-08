@@ -35,4 +35,8 @@ image_multi:
 	$(MAKE) -f multi.mk -s _call_image_multi )
 
 profiles_multi:
-	$(STAGING_DIR_HOST)/bin/sed -n 's/^CONFIG_TARGET_$(if $(CONFIG_TARGET_MULTI_PROFILE),DEVICE_)$(call target_conf,$(BOARD)$(if $(SUBTARGET),_$(SUBTARGET)))_\(.*\)=y/\1/p' .config
+	@$(STAGING_DIR_HOST)/bin/sed -n 's/^CONFIG_TARGET_$(if $(CONFIG_TARGET_MULTI_PROFILE),DEVICE_)$(call target_conf,$(BOARD)$(if $(SUBTARGET),_$(SUBTARGET)))_\(.*\)=y/\1/p' .config
+
+release_env:
+	@echo "IB_BIN_DIR=$(BIN_DIR)"
+	@echo "IB_OS_RELEASE=$(VERSION_DIST_SANITIZED)-$(VERSION_NUMBER)-$(VERSION_CODE)"

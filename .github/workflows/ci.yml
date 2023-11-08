@@ -2,22 +2,50 @@ name: iStore Intl Builder
 
 on:
   workflow_dispatch:
-
+    inputs:
+      target:
+        description: 'build target ["x86_64", "rk35xx", "rk33xx", "rpi4", "all"]'
+        required: true
+        default: 'all'
 env:
-  IB_NAME: openwrt-imagebuilder-22.03.5-x86-64.Linux-x86_64
-  MF_NAME: openwrt-22.03.5-x86-64.manifest
-  IB_URL: https://downloads.openwrt.org/releases/22.03.5/targets/x86/64/
   TZ: Asia/Shanghai
 
 jobs:
-  build:
+  matrix:
     runs-on: ubuntu-latest
-    name: iStore Intl Builder
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Detect build target
+        id: set-matrix
+        env:
+          MATRIX_TARGET: ${{ github.event.inputs.target }}
+        run: |
+          if [ "x${MATRIX_TARGET}" = "x" -o "x${MATRIX_TARGET}" = "xall" ]; then \
+            echo "matrix={\"target\":[\"x86_64\", \"rk35xx\", \"rk33xx\", \"rpi4\"]}" >> $GITHUB_OUTPUT; \
+          else \
+            targets=""; \
+            for target in ${MATRIX_TARGET}; do \
+              targets="$targets, \"$target\"";
+            done; \
+            echo "matrix={\"target\":[${targets#, }]}" >> $GITHUB_OUTPUT; \
+          fi
+  build:
+    needs: matrix
+    runs-on: ubuntu-latest
+    name: iStore Intl for ${{ matrix.target }}
+    strategy:
+      matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
     steps:
       - name: Checkout
         uses: actions/checkout@main
         with:
           fetch-depth: 1
+
+      - name: Import Env
+        env:
+          MATRIX_TARGET: ${{ matrix.target }}
+        run: cat env/${MATRIX_TARGET}.env >> "$GITHUB_ENV"
 
       - name: Initialization environment
         env:
@@ -52,5 +80,16 @@ jobs:
       - name: Build
         run: |
           cp dl/${MF_NAME} ib/target.manifest
+          echo "istoreos-intl - *" >> ib/target.manifest
           cd ib && make -f multi.mk image_multi
 
+      - name: Pack
+        run: |
+          cd ib
+          make -f release.mk IB=1
+          make -f multi.mk release_env >> "$GITHUB_ENV"
+
+      - name: Release
+        run: |
+          cd ib
+          diff ../dl/${MF_NAME} ${IB_BIN_DIR}/${MF_NAME}
