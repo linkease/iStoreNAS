@@ -1,0 +1,50 @@
+name: iStore Intl Builder
+
+on:
+  workflow_dispatch:
+
+env:
+  IB_NAME: openwrt-imagebuilder-22.03.5-x86-64.Linux-x86_64
+  MF_NAME: openwrt-22.03.5-x86-64.manifest
+  IB_URL: https://downloads.openwrt.org/releases/22.03.5/targets/x86/64/
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: iStore Intl Builder
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 1
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install binutils bzip2 xz-utils unzip git wget patch device-tree-compiler
+          sudo -E apt-get -qq clean
+          sudo timedatectl set-timezone "$TZ"
+
+      - name: Download IB
+        run: |
+          wget -O dl/${IB_NAME}.tar.xz ${IB_URL}${IB_NAME}.tar.xz
+          wget -O dl/${MF_NAME} ${IB_URL}${MF_NAME}
+          wget -O dl/sha256sums ${IB_URL}sha256sums
+          cd dl && sha256sum -c sha256sums
+
+      - name: Unpack IB
+        run: |
+          mkdir ib
+          tar -C ib --strip-components=1 -xJf ../dl/${IB_NAME}.tar.xz
+          cp -a src/* ib/
+          ls patches/ | sort | xargs -n1 sh -c 'patch -p1 -d ib -i ../patches/$0'
+          sed -i 's/ unofficial/ oversea/' ib/Makefile
+
+      - name: Build
+        run: |
+          cp dl/${MF_NAME} ib/target.manifest
+          cd ib && make -f multi.mk image_multi
+
