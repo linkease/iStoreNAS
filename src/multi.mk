@@ -32,7 +32,7 @@ image_multi:
 	$(MAKE) -s _check_profile
 	$(MAKE) -s _check_keys
 	(unset PROFILE FILES PACKAGES MAKEFLAGS; \
-	$(MAKE) -f multi.mk -s _call_image_multi
+	$(MAKE) -f multi.mk -s _call_image_multi )
 
 profiles_multi:
 	$(STAGING_DIR_HOST)/bin/sed -n 's/^CONFIG_TARGET_$(if $(CONFIG_TARGET_MULTI_PROFILE),DEVICE_)$(call target_conf,$(BOARD)$(if $(SUBTARGET),_$(SUBTARGET)))_\(.*\)=y/\1/p' .config
