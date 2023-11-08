@@ -34,7 +34,7 @@ jobs:
           wget -O dl/${IB_NAME}.tar.xz ${IB_URL}${IB_NAME}.tar.xz
           wget -O dl/${MF_NAME} ${IB_URL}${MF_NAME}
           wget -O dl/sha256sums ${IB_URL}sha256sums
-          cd dl && sha256sum -c sha256sums
+          cd dl && sha256sum -c --ignore-missing --status sha256sums
 
       - name: Unpack IB
         run: |
