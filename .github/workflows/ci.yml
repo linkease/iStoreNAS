@@ -56,6 +56,16 @@ jobs:
           sudo -E apt-get -qq clean
           sudo timedatectl set-timezone "$TZ"
 
+      - name: Install ORAS
+        env:
+          VERSION: 1.1.0
+        run: |
+          wget -O /tmp/oras.tar.gz "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz"
+          mkdir -p /tmp/oras-install/
+          tar -zxf /tmp/oras.tar.gz -C /tmp/oras-install/
+          sudo mv /tmp/oras-install/oras /usr/local/bin/
+          rm -rf /tmp/oras.tar.gz /tmp/oras-install/
+
       - name: Download IB
         run: |
           mkdir dl
@@ -89,7 +99,29 @@ jobs:
           make -f release.mk IB=1
           make -f multi.mk release_env >> "$GITHUB_ENV"
 
-      - name: Release
+      - name: Compare manifest
         run: |
           cd ib
           diff ../dl/${MF_NAME} ${IB_BIN_DIR}/${MF_NAME}
+
+      - name: Upload
+        env:
+          OCI_REGISTER: ghcr.io
+          OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
+          OCI_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          OCI_PATH: ${{ secrets.OCI_PATH }}
+          IMAGE_SOURCE: ${{ secrets.IMAGE_SOURCE }}
+        run: |
+          oras login -u ${OCI_USERNAME} -p ${OCI_PASSWORD} ${OCI_REGISTER}
+          cd build
+          for board in `ls ./`; do
+            [ -s $board/version.index ] || continue
+            img=$(head -1 $board/version.latest | sed -E 's/.*\((.+)\).*/\1/')
+            ver=$(head -1 $board/version.index)
+            echo "Uploading $board firmware..."
+            oras push --annotation "org.istoreos.version=$ver"
+              --annotation "org.opencontainers.image.source=${IMAGE_SOURCE}"
+              --annotation "org.opencontainers.image.description=iStoreOS $ver for $board"
+              ${OCI_REGISTER}/${OCI_PATH}/$board:latest
+              ./$board/$img:application/vnd.istoreos.firmware
+          done
