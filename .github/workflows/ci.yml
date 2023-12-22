@@ -119,9 +119,9 @@ jobs:
             img=$(head -1 $board/version.latest | sed -E 's/.*\((.+)\).*/\1/')
             ver=$(head -1 $board/version.index)
             echo "Uploading $board firmware..."
-            oras push --annotation "org.istoreos.version=$ver"
-              --annotation "org.opencontainers.image.source=${IMAGE_SOURCE}"
-              --annotation "org.opencontainers.image.description=iStoreOS $ver for $board"
-              ${OCI_REGISTER}/${OCI_PATH}/$board:latest
+            oras push --annotation "org.istoreos.version=$ver" \
+              --annotation "org.opencontainers.image.source=${IMAGE_SOURCE}" \
+              --annotation "org.opencontainers.image.description=iStoreOS $ver for $board" \
+              ${OCI_REGISTER}/${OCI_PATH}/$board:latest \
               ./$board/$img:application/vnd.istoreos.firmware
           done
