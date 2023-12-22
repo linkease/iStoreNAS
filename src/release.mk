@@ -37,11 +37,13 @@ $(1)/$(2)/version.latest: $(1)/$(2)/$(3)
 
 $(1)/$(2)/$(3): $(BIN_DIR)/$(if $(4),$(4),$(3))
 	mkdir -p $(1)/$(2)
+ifeq ($(IB),)
 	$(CP) $(BIN_DIR)/feeds.buildinfo $(1)/$(2)/
 	$(CP) $(BIN_DIR)/config.buildinfo $(1)/$(2)/
 	git log -n 1 --format="%h" > $(1)/$(2)/commit.buildinfo
 	$(CP) ./feeds.conf $(1)/$(2)/
 	./scripts/diffconfig.sh > $(1)/$(2)/config.seed
+endif # !IB
 	$(CP) $$< $$@
 
 endef
