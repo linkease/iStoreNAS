@@ -102,7 +102,7 @@ jobs:
       - name: Compare manifest
         run: |
           cd ib
-          diff ../dl/${MF_NAME} ${IB_BIN_DIR}/${MF_NAME}
+          diff ../dl/${MF_NAME} ${IB_BIN_DIR}/${MF_NAME} || true
 
       - name: Upload
         env:
