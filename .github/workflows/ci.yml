@@ -70,12 +70,9 @@ jobs:
         run: |
           mkdir dl
           wget -O dl/${IB_NAME}.tar.xz ${IB_URL}${IB_NAME}.tar.xz
-          wget -O dl/${MF_NAME} ${IB_URL}${MF_NAME}
           wget -O dl/sha256sums ${IB_URL}sha256sums
           [ -s dl/sha256sums ]
-          [ -s dl/${MF_NAME} ]
           [ -s dl/${IB_NAME}.tar.xz ]
-          grep -Fq ${MF_NAME} dl/sha256sums
           grep -Fq ${IB_NAME}.tar.xz dl/sha256sums
           cd dl && sha256sum -c --ignore-missing --status sha256sums
 
@@ -86,10 +83,17 @@ jobs:
           cp -a src/* ib/
           ls patches/ | sort | xargs -n1 sh -c 'patch -p1 -d ib -i ../patches/$0'
           sed -i 's/ unofficial/ oversea/' ib/Makefile
+          case ${IB_NAME} in
+            *x86*)
+                cp src/repositories_x86_64.conf repositories.conf
+              ;;
+            *)
+              cp src/repositories_aarch64.conf repositories.conf
+            ;;
+          esac
 
       - name: Build
         run: |
-          cp dl/${MF_NAME} ib/target.manifest
           echo "istoreos-intl - *" >> ib/target.manifest
           cd ib && make -f multi.mk image_multi
 
