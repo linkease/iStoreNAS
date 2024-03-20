@@ -85,10 +85,10 @@ jobs:
           sed -i 's/ unofficial/ oversea/' ib/Makefile
           case ${IB_NAME} in
             *x86*)
-                cp src/repositories_x86_64.conf repositories.conf
+                cp src/repositories_x86_64.conf ib/repositories.conf
               ;;
             *)
-              cp src/repositories_aarch64.conf repositories.conf
+              cp src/repositories_aarch64.conf ib/repositories.conf
             ;;
           esac
 
