@@ -84,6 +84,10 @@ jobs:
           cp -a src/* ib/
           ls patches/ | sort | xargs -n1 sh -c 'patch -p1 -d ib -i ../patches/$0'
           sed -i 's/ unofficial/ oversea/' ib/Makefile
+          ls packages/all | cut -d "_" -f 1 | xargs -n1 sh -c 'rm ib/packages/$0*.ipk'
+          cp packages/all/*.ipk ib/packages/
+          mkdir -p ib/files
+          cp -a files/all/* ib/files
           case ${IB_URL} in
             *x86*)
                 cp src/repositories_x86_64.conf ib/repositories.conf
@@ -106,7 +110,7 @@ jobs:
       - name: Build
         run: |
           echo "istoreos-intl - *" >> ib/target.manifest
-          cd ib && make -f multi.mk image_multi
+          cd ib && make -f multi.mk image_multi FILES="files"
 
       - name: Pack
         run: |

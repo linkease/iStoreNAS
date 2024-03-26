@@ -899,4 +899,6 @@ zlib - 1.2.11-6
 zram-swap - 3
 routergo - 0.12.4
 luci-app-routerdog - 1.2.4
-
+luci-nginx
+aria2
+luci-app-aria2
