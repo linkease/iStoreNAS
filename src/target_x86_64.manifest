@@ -902,3 +902,4 @@ luci-app-routerdog - 1.2.4
 luci-nginx
 aria2
 luci-app-aria2
+app-meta-routerdog
