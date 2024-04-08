@@ -6,7 +6,7 @@ RUN apt-get update &&\
     apt-get install -y \
         sudo time git-core build-essential g++ bash make \
         libssl-dev patch libncurses5 libncurses5-dev zlib1g-dev gawk \
-        flex gettext wget unzip bzip2 xz-utils device-tree-compiler rsync curl \
+        flex gettext wget unzip bzip2 xz-utils device-tree-compiler rsync curl python3 python3-distutils-extra python3-setuptools \
         libsnmp-dev liblzma-dev libpam0g-dev cpio rsync gcc-multilib && \
     apt-get clean && \
     useradd -m builder && \
