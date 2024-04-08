@@ -1,4 +1,7 @@
 build
 dl
 ib
+ib_x86_64
+ib_rk35xx
+ib_rk33xx
 

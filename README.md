@@ -1,2 +1,4 @@
-# istoreos-intl-builder
-Github Actions ImageBuilder istoreos intl
+# iStoreNAS
+
+Define a system base iStoreOS by yourself.
+
