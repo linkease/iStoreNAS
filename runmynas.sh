@@ -16,9 +16,10 @@ esac
 
 
 CURR=`pwd`
+mkdir -p dl
 mkdir -p ${CURR}/ib_${TARGET}
 
-docker run -it --rm \
+docker run -it --rm -u $(id -u):$(id -g) \
   -v ${CURR}:/work \
   -v ${CURR}/ib_${TARGET}:/work/ib \
 	-e WORK_TARGET=${TARGET} \
