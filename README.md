@@ -6,4 +6,6 @@ Define a system base iStoreOS by yourself.
 
 * ./runmynas.sh x86_64
 * ./runmynas.sh rk35xx
+* ./runmynas.sh rk33xx
+
 
