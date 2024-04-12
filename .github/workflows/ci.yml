@@ -94,11 +94,11 @@ jobs:
                 cp src/target_x86_64.manifest ib/target.manifest
               ;;
             *rk35xx*)
-                cp src/repositories_aarch64.conf ib/repositories.conf
+                cp src/repositories_rk35xx.conf ib/repositories.conf
                 cp src/target_rk35xx.manifest ib/target.manifest
               ;;
             *rk33xx*)
-                cp src/repositories_aarch64.conf ib/repositories.conf
+                cp src/repositories_rk33xx.conf ib/repositories.conf
                 cp src/target_rk33xx.manifest ib/target.manifest
               ;;
             *bcm2711*)
