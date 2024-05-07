@@ -10,7 +10,27 @@ package_install_multi: FORCE
 	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/libc_*.ipk $(PACKAGE_DIR)/libc_*.ipk))
 	$(OPKG) install $(firstword $(wildcard $(LINUX_DIR)/kernel_*.ipk $(PACKAGE_DIR)/kernel_*.ipk))
 	cut -d' ' -f1 target.manifest >$(TMP_DIR)/opkg_install_list
-	$(OPKG) install $$(cat $(TMP_DIR)/opkg_install_list)
+	rm -f $(TMP_DIR)/opkg_add_list $(TMP_DIR)/opkg_remove_list
+	if [ -s custom.manifest ]; then \
+		grep '^-' custom.manifest | sed 's/^- *//g' >$(TMP_DIR)/opkg_remove_list; \
+		grep -v '^-' custom.manifest >$(TMP_DIR)/opkg_add_list; \
+	fi
+	@echo Installing base packages...
+	if grep -Eq '^src +imagebuilder +file:packages$$' repositories.conf; then \
+		echo 'src imagebuilder file:packages' >$(TMP_DIR)/base_repositories.conf; \
+		grep '^option ' repositories.conf >>$(TMP_DIR)/base_repositories.conf; \
+		$(OPKG) -f $(TMP_DIR)/base_repositories.conf install --nodeps $$(cat $(TMP_DIR)/opkg_install_list); \
+	else \
+		$(OPKG) install --nodeps $$(cat $(TMP_DIR)/opkg_install_list); \
+	fi
+	if [ -s $(TMP_DIR)/opkg_remove_list ]; then \
+		echo "Removing custom packages..."; \
+		$(OPKG) remove --force-removal-of-dependent-packages $$(cat $(TMP_DIR)/opkg_remove_list); \
+	fi
+	if [ -s $(TMP_DIR)/opkg_add_list ]; then \
+		echo "Installing custom packages..."; \
+		$(OPKG) install $$(cat $(TMP_DIR)/opkg_add_list); \
+	fi
 
 build_image_multi: FORCE
 	@echo
