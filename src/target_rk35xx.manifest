@@ -1,6 +1,8 @@
+nginx
+nginx-mod-luci
 routergo
 luci-app-routerdog
-luci-nginx
 aria2
 luci-app-aria2
 app-meta-routerdog
+
