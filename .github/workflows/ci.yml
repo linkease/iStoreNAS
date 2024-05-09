@@ -88,28 +88,28 @@ jobs:
           cp packages/all/*.ipk ib/packages/
           mkdir -p ib/files
           cp -a files/all/* ib/files
+          cp dl/${MF_NAME} ib/target.manifest
           case ${IB_URL} in
             *x86*)
                 cp src/repositories_x86_64.conf ib/repositories.conf
-                cp src/target_x86_64.manifest ib/target.manifest
+                cp src/target_x86_64.manifest ib/custom.manifest
               ;;
             *rk35xx*)
                 cp src/repositories_rk35xx.conf ib/repositories.conf
-                cp src/target_rk35xx.manifest ib/target.manifest
+                cp src/target_rk35xx.manifest ib/custom.manifest
               ;;
             *rk33xx*)
                 cp src/repositories_rk33xx.conf ib/repositories.conf
-                cp src/target_rk33xx.manifest ib/target.manifest
+                cp src/target_rk33xx.manifest ib/custom.manifest
               ;;
             *bcm2711*)
                 cp src/repositories_aarch64.conf ib/repositories.conf
-                cp src/target_bcm2711.manifest ib/target.manifest
+                cp src/target_bcm2711.manifest ib/custom.manifest
               ;;
           esac
 
       - name: Build
         run: |
-          echo "istoreos-intl - *" >> ib/target.manifest
           cd ib && make -f multi.mk image_multi FILES="files"
 
       - name: Pack
