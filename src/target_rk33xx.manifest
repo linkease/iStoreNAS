@@ -1,1 +1,11 @@
-istoreos-intl
+kmod-rkwifi-bcmdhd
+rkwifi-firmware-ap6256
+kmod-sound-soc-rk3308
+nginx
+nginx-mod-luci
+routergo
+luci-app-routerdog
+aria2
+luci-app-aria2
+app-meta-routerdog
+
