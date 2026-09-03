@@ -6,3 +6,6 @@ aria2
 luci-app-aria2
 app-meta-routerdog
 
+quickstart
+luci-app-quickstart
+luci-i18n-quickstart-zh-cn

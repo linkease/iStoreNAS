@@ -1,0 +1,4 @@
+# iStoreNAS single-interface gateway mode for Docker macvlan DHCP LAN.
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -C FORWARD -i eth0 -o eth0 -j ACCEPT 2>/dev/null || iptables -I FORWARD 1 -i eth0 -o eth0 -j ACCEPT
+iptables -t nat -C POSTROUTING -o eth0 -j MASQUERADE 2>/dev/null || iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
