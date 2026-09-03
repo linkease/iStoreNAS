@@ -1,0 +1,7 @@
+#!/bin/sh
+
+uci -q delete uhttpd.main.proxy_prefix
+uci add_list uhttpd.main.proxy_prefix=/apps=http://127.0.0.1:19290
+uci commit uhttpd
+
+exit 0
