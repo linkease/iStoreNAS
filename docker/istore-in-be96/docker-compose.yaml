@@ -1,0 +1,20 @@
+services:
+  istorenas:
+    image: linkease/istore-in-be96:22.03
+    container_name: istorenas
+    restart: unless-stopped
+    privileged: true
+    networks:
+      istoreos-lan: {}
+    command: /sbin/init
+
+networks:
+  istoreos-lan:
+    name: istoreos-lan
+    driver: macvlan
+    driver_opts:
+      parent: ${ISTOREOS_LAN_PARENT:-eth0}
+    ipam:
+      config:
+        - subnet: ${ISTOREOS_LAN_SUBNET:-192.168.60.0/24}
+          gateway: ${ISTOREOS_LAN_GATEWAY:-192.168.60.1}
