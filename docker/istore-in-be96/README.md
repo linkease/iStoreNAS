@@ -1,22 +1,26 @@
 # istore-in-be96
 
-iStoreNAS/iStoreOS 22.03 Docker rootfs image for BE96-style Docker-only hosts.
+iStoreOS Docker rootfs image for BE96-style Docker-only hosts.
 
 ## Start
 
 ```sh
+export ISTOREOS_IMAGE_TAG=22.03
 docker compose up -d
 ```
 
-The compose file creates a macvlan network so iStoreNAS can obtain an
+Use `ISTOREOS_IMAGE_TAG=24.10` to run the 24.10 image.
+
+The compose file creates a macvlan network so iStoreOS can obtain an
 independent LAN address by DHCP. Adjust these variables when the LAN differs:
 
 ```sh
 export ISTOREOS_LAN_PARENT=eth0
-export ISTOREOS_LAN_SUBNET=192.168.60.0/24
-export ISTOREOS_LAN_GATEWAY=192.168.60.1
+export ISTOREOS_LAN_SUBNET=192.168.50.0/24
+export ISTOREOS_LAN_GATEWAY=192.168.50.1
 ```
 
-The image keeps OpenWrt/iStoreOS 22.03 legacy iptables packages and includes
+The 22.03 image keeps OpenWrt/iStoreOS legacy iptables packages and includes
 `quickstart`, `luci-app-quickstart`, `luci-i18n-quickstart-zh-cn`, and
-`luci-theme-istorenas`.
+`luci-theme-istorenas`. The 24.10 image is built from the 24.10 rk3xxx
+ImageBuilder flow.

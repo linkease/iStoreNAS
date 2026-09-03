@@ -70,7 +70,9 @@ REPOS
     touch ib/.istorenas-2410-prepared
 fi
 
-# Always refresh source-controlled overlay and package manifest, even when the IB was already prepared.
+# Always refresh source-controlled build files, overlay, and package manifest,
+# even when the IB was already prepared.
+cp -a ${WORK_SOURCE}/src/multi.mk ${WORK_SOURCE}/src/release.mk ${WORK_SOURCE}/ib/
 rm -rf ${WORK_SOURCE}/ib/files
 mkdir -p ${WORK_SOURCE}/ib/files
 cp -a ${WORK_SOURCE}/files/all/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
