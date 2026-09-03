@@ -70,6 +70,29 @@ if [ "$IB_FOUND" = "0" ]; then
 fi
 set +e
 
+# Always refresh source-controlled overlay and package manifest, even when the IB was already prepared.
+rm -rf ${WORK_SOURCE}/ib/files
+mkdir -p ${WORK_SOURCE}/ib/files
+cp -a ${WORK_SOURCE}/files/all/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+case ${WORK_TARGET} in
+  *x86*)
+      cp ${WORK_SOURCE}/src/target_x86_64.manifest ${WORK_SOURCE}/ib/custom.manifest
+      cp -a ${WORK_SOURCE}/files/x86_64/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+    ;;
+  *rk35xx*)
+      cp ${WORK_SOURCE}/src/target_rk35xx.manifest ${WORK_SOURCE}/ib/custom.manifest
+      cp -a ${WORK_SOURCE}/files/rk35xx/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+    ;;
+  *rk33xx*)
+      cp ${WORK_SOURCE}/src/target_rk33xx.manifest ${WORK_SOURCE}/ib/custom.manifest
+      cp -a ${WORK_SOURCE}/files/rk33xx/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+    ;;
+  *bcm2711*)
+      cp ${WORK_SOURCE}/src/target_bcm2711.manifest ${WORK_SOURCE}/ib/custom.manifest
+      cp -a ${WORK_SOURCE}/files/bcm2711/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+    ;;
+esac
+
 cd ${WORK_SOURCE}/ib
 
 case $1 in

@@ -70,6 +70,15 @@ REPOS
     touch ib/.istorenas-2410-prepared
 fi
 
+# Always refresh source-controlled overlay and package manifest, even when the IB was already prepared.
+rm -rf ${WORK_SOURCE}/ib/files
+mkdir -p ${WORK_SOURCE}/ib/files
+cp -a ${WORK_SOURCE}/files/all/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+cp -a ${WORK_SOURCE}/files/${WORK_TARGET}/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
+rm -f ${WORK_SOURCE}/ib/files/etc/config/nginx
+rm -f ${WORK_SOURCE}/ib/files/etc/nginx/uci.conf.template
+cp ${WORK_SOURCE}/src/target_${WORK_TARGET}.manifest ${WORK_SOURCE}/ib/custom.manifest
+
 cd ${WORK_SOURCE}/ib
 
 case $1 in
