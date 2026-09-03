@@ -5,3 +5,8 @@ ib_x86_64
 ib_rk35xx
 ib_rk33xx
 
+artifacts
+build-logs
+ib_rk3xxx_2410
+packages/all/IPKG_BUILD.*
+env/*.bak-*

@@ -1,0 +1,14 @@
+-nginx
+-nginx-mod-luci
+-nginx-ssl
+-nginx-util
+-nginx-ssl-util
+-uwsgi
+-uwsgi-cgi-plugin
+-uwsgi-luci-support
+-uwsgi-syslog-plugin
+uhttpd
+uhttpd-mod-ubus
+luci-base
+luci-ssl
+app-meta-istorenas
