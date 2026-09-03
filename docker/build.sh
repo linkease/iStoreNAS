@@ -43,6 +43,10 @@ if [ "${prepare_ib}" = "1" ]; then
     if [ -n "${IB_TARBALL:-}" ]; then
         tar -C ib --strip-components=1 -xf "${IB_TARBALL}"
         echo "${actual_sha}" > ib/.source_tarball_sha256
+        if [ -n "${IB_MANIFEST:-}" ]; then
+            [ -f "${IB_MANIFEST}" ] || { echo "missing local ImageBuilder manifest: ${IB_MANIFEST}" >&2; exit 1; }
+            cp "${IB_MANIFEST}" ib/target.manifest
+        fi
     else
         if [ ! -f dl/${IB_NAME}.tar.xz ]; then
             wget -O dl/${MF_NAME} ${IB_URL}${MF_NAME}
@@ -60,8 +64,7 @@ if [ "${prepare_ib}" = "1" ]; then
 
     cd ${WORK_SOURCE}
     cp -a src/* ib/
-    printf '%s
-' 001-all-profiles.patch | xargs -n1 sh -c 'patch -N --batch -p1 -d ib -i ../patches/$0'
+    printf '%s\n' 001-all-profiles.patch | xargs -n1 sh -c 'patch -N --batch -p1 -d ib -i ../patches/$0'
     sed -i 's/ unofficial/ oversea/' ib/Makefile
     ls packages/all | cut -d "_" -f 1 | xargs -n1 sh -c 'rm -f ib/packages/$0*.ipk'
     cp packages/all/*.ipk ib/packages/
