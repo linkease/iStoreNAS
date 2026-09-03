@@ -32,6 +32,11 @@ package_install_multi: FORCE
 		$(OPKG) install $$(cat $(TMP_DIR)/opkg_add_list); \
 	fi
 
+clean_rk35xx_apps_proxy: FORCE
+	@if [ "$(BOARD)" = "rockchip" ] && [ "$(SUBTARGET)" = "rk35xx" ]; then \
+		rm -f "$(TARGET_DIR)/etc/uci-defaults/41_uhttpd_proxy_linkease"; \
+	fi
+
 build_image_multi: FORCE
 	@echo
 	@echo Building multi images...
@@ -45,6 +50,7 @@ _call_image_multi: staging_dir/host/.prereq-build
 	$(MAKE) package_reload
 	$(MAKE) -f multi.mk package_install_multi
 	$(MAKE) -s prepare_rootfs
+	$(MAKE) -f multi.mk clean_rk35xx_apps_proxy
 	$(MAKE) -f multi.mk build_image_multi
 	$(MAKE) -s checksum
 

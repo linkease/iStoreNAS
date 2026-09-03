@@ -97,6 +97,7 @@ refresh_ipks() {
 }
 
 refresh_ipks
+cp -a ${WORK_SOURCE}/src/* ${WORK_SOURCE}/ib/
 
 rm -rf ${WORK_SOURCE}/ib/files
 mkdir -p ${WORK_SOURCE}/ib/files
