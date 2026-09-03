@@ -60,7 +60,8 @@ if [ "${prepare_ib}" = "1" ]; then
 
     cd ${WORK_SOURCE}
     cp -a src/* ib/
-    ls patches/ | sort | xargs -n1 sh -c 'patch -p1 -d ib -i ../patches/$0'
+    printf '%s
+' 001-all-profiles.patch | xargs -n1 sh -c 'patch -N --batch -p1 -d ib -i ../patches/$0'
     sed -i 's/ unofficial/ oversea/' ib/Makefile
     ls packages/all | cut -d "_" -f 1 | xargs -n1 sh -c 'rm -f ib/packages/$0*.ipk'
     cp packages/all/*.ipk ib/packages/
