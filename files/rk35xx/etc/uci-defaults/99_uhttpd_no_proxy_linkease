@@ -1,0 +1,6 @@
+#!/bin/sh
+
+uci -q delete uhttpd.main.proxy_prefix
+uci commit uhttpd
+
+exit 0
