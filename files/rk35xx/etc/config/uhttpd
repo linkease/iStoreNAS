@@ -12,7 +12,6 @@ config uhttpd main
 	option key /etc/uhttpd.key
 	option cgi_prefix /cgi-bin
 	list lua_prefix /cgi-bin/luci=/usr/lib/lua/luci/sgi/uhttpd.lua
-	list proxy_prefix /apps=http://127.0.0.1:19290
 	option script_timeout 360
 	option network_timeout 30
 	option http_keepalive 20

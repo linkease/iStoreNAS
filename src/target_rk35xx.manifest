@@ -22,7 +22,4 @@ luci-i18n-quickstart-zh-cn
 
 -luci-app-argon-config
 
-linkeasefull
-luci-app-linkeasefull
-luci-i18n-linkeasefull-zh-cn
 luci-theme-istorenas
