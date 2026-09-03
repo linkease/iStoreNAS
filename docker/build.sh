@@ -66,12 +66,38 @@ if [ "${prepare_ib}" = "1" ]; then
     cp -a src/* ib/
     printf '%s\n' 001-all-profiles.patch | xargs -n1 sh -c 'patch -N --batch -p1 -d ib -i ../patches/$0'
     sed -i 's/ unofficial/ oversea/' ib/Makefile
-    ls packages/all | cut -d "_" -f 1 | xargs -n1 sh -c 'rm -f ib/packages/$0*.ipk'
-    cp packages/all/*.ipk ib/packages/
 fi
 set +e
 
-# Always refresh source-controlled overlay and package manifest, even when the IB was already prepared.
+# Always refresh source-controlled overlay, selected local IPKs, and package manifest.
+is_excluded_ipk() {
+    local pkg="$1"
+    local exclude
+
+    for exclude in ${LOCAL_IPK_EXCLUDE:-}; do
+        [ "${pkg}" = "${exclude}" ] && return 0
+    done
+
+    return 1
+}
+
+refresh_ipks() {
+    local ipk_dir ipk pkg
+
+    for ipk_dir in ${WORK_SOURCE}/packages/all ${EXTRA_IPK_DIRS:-}; do
+        [ -d "${ipk_dir}" ] || { echo "missing IPK directory: ${ipk_dir}" >&2; exit 1; }
+        for ipk in "${ipk_dir}"/*.ipk; do
+            [ -e "${ipk}" ] || continue
+            pkg="$(basename "${ipk}" | cut -d "_" -f 1)"
+            is_excluded_ipk "${pkg}" && continue
+            rm -f "${WORK_SOURCE}"/ib/packages/"${pkg}"_*.ipk
+            cp "${ipk}" "${WORK_SOURCE}"/ib/packages/
+        done
+    done
+}
+
+refresh_ipks
+
 rm -rf ${WORK_SOURCE}/ib/files
 mkdir -p ${WORK_SOURCE}/ib/files
 if [ -n "${IB_MANIFEST:-}" ]; then
