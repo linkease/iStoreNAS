@@ -13,7 +13,6 @@
 -app-meta-routerdog
 
 luci-base
-luci-ssl
 uhttpd
 uhttpd-mod-ubus
 
