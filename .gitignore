@@ -10,3 +10,4 @@ build-logs
 ib_rk3xxx_2410
 packages/all/IPKG_BUILD.*
 env/*.bak-*
+ib_*.bak-*
