@@ -126,6 +126,7 @@ esac
 
 if [ "${WORK_TARGET}" = "rk35xx" ]; then
     rm -f "${WORK_SOURCE}"/ib/build_dir/target-*/root-*/etc/uci-defaults/41_uhttpd_proxy_linkease
+    rm -f "${WORK_SOURCE}"/ib/build_dir/target-*/root.orig-*/etc/uci-defaults/41_uhttpd_proxy_linkease
 fi
 
 cd ${WORK_SOURCE}/ib
