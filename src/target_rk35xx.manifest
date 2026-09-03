@@ -19,3 +19,11 @@ uhttpd-mod-ubus
 quickstart
 luci-app-quickstart
 luci-i18n-quickstart-zh-cn
+
+-luci-app-argon-config
+-luci-i18n-argon-config-zh-cn
+
+linkeasefull
+luci-app-linkeasefull
+luci-i18n-linkeasefull-zh-cn
+luci-theme-istorenas
