@@ -74,6 +74,10 @@ set +e
 # Always refresh source-controlled overlay and package manifest, even when the IB was already prepared.
 rm -rf ${WORK_SOURCE}/ib/files
 mkdir -p ${WORK_SOURCE}/ib/files
+if [ -n "${IB_MANIFEST:-}" ]; then
+    [ -f "${IB_MANIFEST}" ] || { echo "missing local ImageBuilder manifest: ${IB_MANIFEST}" >&2; exit 1; }
+    cp "${IB_MANIFEST}" ${WORK_SOURCE}/ib/target.manifest
+fi
 cp -a ${WORK_SOURCE}/files/all/* ${WORK_SOURCE}/ib/files/ 2>/dev/null || true
 case ${WORK_TARGET} in
   *x86*)
