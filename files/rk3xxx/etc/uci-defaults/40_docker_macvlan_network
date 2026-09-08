@@ -1,0 +1,14 @@
+#!/bin/sh
+
+uci -q batch <<'EOF'
+set network.lan.device='eth0'
+set network.lan.proto='dhcp'
+delete network.@device[0].type
+delete network.@device[0].ports
+set network.@device[0].name='eth0'
+set dhcp.lan.ignore='1'
+commit network
+commit dhcp
+EOF
+
+exit 0
