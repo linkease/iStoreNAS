@@ -66,7 +66,16 @@ EOF
       fi
 
       while read -r route; do
-        [ -n "${route}" ] && ip route replace ${route#default } dev "${bridge}" || true
+        [ -n "${route}" ] || continue
+        gateway="$(printf '%s\n' "${route}" | awk '{for (i = 1; i <= NF; i++) if ($i == "via") print $(i + 1)}')"
+        metric="$(printf '%s\n' "${route}" | awk '{for (i = 1; i <= NF; i++) if ($i == "metric") print $(i + 1)}')"
+        if [ -n "${gateway}" ]; then
+          if [ -n "${metric}" ]; then
+            ip route replace default via "${gateway}" dev "${bridge}" metric "${metric}" || true
+          else
+            ip route replace default via "${gateway}" dev "${bridge}" || true
+          fi
+        fi
       done < <(ip route show default dev "${parent}")
 
       ip addr flush dev "${parent}"

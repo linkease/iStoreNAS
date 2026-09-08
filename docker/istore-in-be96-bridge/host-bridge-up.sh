@@ -85,7 +85,14 @@ ip addr show dev "$bridge" | grep -q 'inet ' || {
 }
 
 ip route show default dev "$parent" | while read route; do
-	ip route replace ${route#default } dev "$bridge"
+	gateway="$(printf '%s\n' "$route" | awk '{for (i = 1; i <= NF; i++) if ($i == "via") print $(i + 1)}')"
+	metric="$(printf '%s\n' "$route" | awk '{for (i = 1; i <= NF; i++) if ($i == "metric") print $(i + 1)}')"
+	[ -n "$gateway" ] || continue
+	if [ -n "$metric" ]; then
+		ip route replace default via "$gateway" dev "$bridge" metric "$metric"
+	else
+		ip route replace default via "$gateway" dev "$bridge"
+	fi
 done
 
 ip addr flush dev "$parent"
