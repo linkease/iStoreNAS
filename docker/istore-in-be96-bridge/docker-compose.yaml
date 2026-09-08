@@ -1,0 +1,14 @@
+services:
+  istoreos:
+    image: ${ISTOREOS_IMAGE:-linkease/istore-in-be96:24.10}
+    container_name: ${ISTOREOS_CONTAINER:-istoreos}
+    restart: unless-stopped
+    privileged: true
+    network_mode: none
+    command:
+      - /bin/sh
+      - -lc
+      - |
+        while [ ! -e /tmp/istoreos-start-init ]; do sleep 1; done
+        exec /sbin/init
+
