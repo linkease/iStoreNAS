@@ -47,10 +47,16 @@ RUN mkdir -p /run/sshd /home/debug/.ssh \
     >> /etc/ssh/sshd_config
 
 COPY entrypoint.sh /usr/local/bin/debug-ssh-entrypoint
+COPY istoreos-manager.sh /usr/local/bin/istoreos-manager
 
-RUN chmod 0755 /usr/local/bin/debug-ssh-entrypoint
+RUN chmod 0755 /usr/local/bin/debug-ssh-entrypoint /usr/local/bin/istoreos-manager
 
-ENV DEBUG_SSH_PORT=2223
+ENV DEBUG_SSH_PORT=2223 \
+    ISTOREOS_AUTO_START=0 \
+    ISTOREOS_CONTAINER=istoreos \
+    ISTOREOS_IMAGE=linkease/istore-in-be96:24.10 \
+    ISTOREOS_BRIDGE=br-istoreos \
+    ISTOREOS_PARENT=eth0
 
 EXPOSE 2223
 

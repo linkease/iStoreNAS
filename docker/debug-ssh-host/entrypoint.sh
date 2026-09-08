@@ -11,17 +11,27 @@ case "${debug_ssh_port}" in
     ;;
 esac
 
+password_auth=no
+if [ -n "${DEBUG_PASSWORD:-}" ]; then
+  printf 'debug:%s\n' "${DEBUG_PASSWORD}" | chpasswd
+  password_auth=yes
+fi
+
 if [ -n "${DEBUG_AUTHORIZED_KEYS:-}" ]; then
   printf '%s\n' "${DEBUG_AUTHORIZED_KEYS}" > /home/debug/.ssh/authorized_keys
 elif [ -s /authorized_keys ]; then
   cp /authorized_keys /home/debug/.ssh/authorized_keys
-elif [ ! -s /home/debug/.ssh/authorized_keys ]; then
-  echo "missing SSH public key: set DEBUG_AUTHORIZED_KEYS or mount /authorized_keys" >&2
+elif [ "${password_auth}" != yes ] && [ ! -s /home/debug/.ssh/authorized_keys ]; then
+  echo "missing SSH credential: set DEBUG_AUTHORIZED_KEYS, mount /authorized_keys, or set DEBUG_PASSWORD" >&2
   exit 2
 fi
 
-chown debug:debug /home/debug/.ssh/authorized_keys
-chmod 0600 /home/debug/.ssh/authorized_keys
+if [ -s /home/debug/.ssh/authorized_keys ]; then
+  chown debug:debug /home/debug/.ssh/authorized_keys
+  chmod 0600 /home/debug/.ssh/authorized_keys
+fi
+
+sed -i "s/^#\\?PasswordAuthentication .*/PasswordAuthentication ${password_auth}/" /etc/ssh/sshd_config
 
 cat >/etc/motd <<'MOTD'
 be96-debug
@@ -35,5 +45,9 @@ Useful commands:
 This container is intended to run with:
   --privileged --pid=host --ipc=host --uts=host -v /:/host:rw,rslave
 MOTD
+
+if [ "${ISTOREOS_AUTO_START:-0}" = "1" ]; then
+  /usr/local/bin/istoreos-manager >>/var/log/istoreos-manager.log 2>&1 &
+fi
 
 exec /usr/sbin/sshd -D -e -p "${debug_ssh_port}"
