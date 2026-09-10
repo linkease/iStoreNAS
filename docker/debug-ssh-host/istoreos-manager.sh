@@ -4,7 +4,7 @@ set -euo pipefail
 container="${ISTOREOS_CONTAINER:-istoreos}"
 image="${ISTOREOS_IMAGE:-linkease/istore-in-be96:24.10}"
 bridge="${ISTOREOS_BRIDGE:-br-istoreos}"
-parent="${ISTOREOS_PARENT:-eth0}"
+parent="${ISTOREOS_PARENT-eth0}"
 static="${ISTOREOS_STATIC:-}"
 gateway="${ISTOREOS_GATEWAY:-}"
 dns="${ISTOREOS_DNS:-}"
