@@ -36,6 +36,35 @@ ensure_bridge_forwarding() {
   fi
 }
 
+ensure_image() {
+  local ref
+  local refs=("${image}")
+
+  if docker image inspect "${image}" >/dev/null 2>&1; then
+    return
+  fi
+
+  case "${image}" in
+    linkease/*)
+      refs+=("registry.linkease.net:5443/${image}")
+      refs+=("docker.1ms.run/${image}")
+      ;;
+  esac
+
+  for ref in "${refs[@]}"; do
+    log "pulling image=${ref}"
+    if docker pull "${ref}"; then
+      if [ "${ref}" != "${image}" ]; then
+        docker tag "${ref}" "${image}"
+      fi
+      return
+    fi
+  done
+
+  echo "failed to pull image from all mirrors: ${image}" >&2
+  exit 2
+}
+
 ensure_host_bridge() {
   check_ifname "${bridge}"
 
@@ -111,6 +140,7 @@ write_container_file() {
 
 launch_istoreos() {
   docker rm -f "${container}" >/dev/null 2>&1 || true
+  ensure_image
 
   docker run -d \
     --name "${container}" \
