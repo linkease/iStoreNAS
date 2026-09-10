@@ -182,6 +182,8 @@ set -eu
 logger -t bridge-mode-net "configuring br-lan bridge mode"
 
 /etc/init.d/network stop >/dev/null 2>&1 || true
+ip link set lo up
+ip addr add 127.0.0.1/8 dev lo >/dev/null 2>&1 || true
 ip netns del dhns >/dev/null 2>&1 || true
 ip link del br-lan >/dev/null 2>&1 || true
 ip link set eth0 nomaster >/dev/null 2>&1 || true
