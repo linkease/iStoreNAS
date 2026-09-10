@@ -2,7 +2,7 @@
 set -eu
 
 container=istoreos
-image=linkease/istore-in-be96:24.10
+image=linkease/istore24.10-in-be96:latest
 bridge=br-istoreos
 static=
 gateway=

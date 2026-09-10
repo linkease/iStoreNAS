@@ -15,7 +15,7 @@ services:
       DEBUG_PASSWORD: "${DEBUG_PASSWORD:-}"
       ISTOREOS_AUTO_START: "${ISTOREOS_AUTO_START:-0}"
       ISTOREOS_CONTAINER: "${ISTOREOS_CONTAINER:-istoreos}"
-      ISTOREOS_IMAGE: "${ISTOREOS_IMAGE:-linkease/istore-in-be96:24.10}"
+      ISTOREOS_IMAGE: "${ISTOREOS_IMAGE:-linkease/istore24.10-in-be96:latest}"
       ISTOREOS_BRIDGE: "${ISTOREOS_BRIDGE:-br-istoreos}"
       ISTOREOS_PARENT: "${ISTOREOS_PARENT:-eth0}"
       ISTOREOS_DNS: "${ISTOREOS_DNS:-}"

@@ -33,7 +33,7 @@ The migration command writes a rollback script before changing links.
 ```sh
 sudo ./launch-istoreos-bridge.sh \
   --container istoreos \
-  --image linkease/istore-in-be96:24.10 \
+  --image linkease/istore24.10-in-be96:latest \
   --bridge br-istoreos
 ```
 
@@ -42,7 +42,7 @@ For the smoke-test bridge:
 ```sh
 sudo ./launch-istoreos-bridge.sh \
   --container istoreos-bridge-test \
-  --image linkease/istore-in-be96:24.10 \
+  --image linkease/istore24.10-in-be96:latest \
   --bridge br-istest \
   --static 10.90.0.2/24 \
   --gateway 10.90.0.1

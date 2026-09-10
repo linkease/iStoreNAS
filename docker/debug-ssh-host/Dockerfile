@@ -54,7 +54,7 @@ RUN chmod 0755 /usr/local/bin/debug-ssh-entrypoint /usr/local/bin/istoreos-manag
 ENV DEBUG_SSH_PORT=2223 \
     ISTOREOS_AUTO_START=0 \
     ISTOREOS_CONTAINER=istoreos \
-    ISTOREOS_IMAGE=linkease/istore-in-be96:24.10 \
+    ISTOREOS_IMAGE=linkease/istore24.10-in-be96:latest \
     ISTOREOS_BRIDGE=br-istoreos \
     ISTOREOS_PARENT=eth0
 

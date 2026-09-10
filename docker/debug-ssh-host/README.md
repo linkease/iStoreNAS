@@ -42,7 +42,7 @@ export DEBUG_PASSWORD='change-this-password'
 export ISTOREOS_AUTO_START=1
 export ISTOREOS_PARENT=eth0
 export ISTOREOS_BRIDGE=br-istoreos
-export ISTOREOS_IMAGE=linkease/istore-in-be96:24.10
+export ISTOREOS_IMAGE=linkease/istore24.10-in-be96:latest
 docker compose up -d
 ```
 

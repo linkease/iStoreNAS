@@ -1,6 +1,6 @@
 services:
   istoreos:
-    image: ${ISTOREOS_IMAGE:-linkease/istore-in-be96:24.10}
+    image: ${ISTOREOS_IMAGE:-linkease/istore24.10-in-be96:latest}
     container_name: ${ISTOREOS_CONTAINER:-istoreos}
     restart: unless-stopped
     privileged: true
