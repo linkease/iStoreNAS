@@ -20,6 +20,22 @@ check_ifname() {
   fi
 }
 
+ensure_bridge_forwarding() {
+  local iptables_bin=""
+
+  for candidate in /host/usr/sbin/iptables /host/sbin/iptables /usr/sbin/iptables /sbin/iptables; do
+    if [ -x "${candidate}" ]; then
+      iptables_bin="${candidate}"
+      break
+    fi
+  done
+
+  if [ -n "${iptables_bin}" ]; then
+    "${iptables_bin}" -C FORWARD -i "${bridge}" -o "${bridge}" -j ACCEPT >/dev/null 2>&1 ||
+      "${iptables_bin}" -I FORWARD 1 -i "${bridge}" -o "${bridge}" -j ACCEPT || true
+  fi
+}
+
 ensure_host_bridge() {
   check_ifname "${bridge}"
 
@@ -84,6 +100,8 @@ EOF
       ip link set "${bridge}" up
     fi
   fi
+
+  ensure_bridge_forwarding
 }
 
 write_container_file() {

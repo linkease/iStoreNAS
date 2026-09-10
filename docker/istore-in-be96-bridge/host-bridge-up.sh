@@ -41,6 +41,22 @@ ensure_bridge() {
 	ip link set "$bridge" up
 }
 
+ensure_bridge_forwarding() {
+	local iptables_bin=
+
+	for candidate in /usr/sbin/iptables /sbin/iptables; do
+		if [ -x "$candidate" ]; then
+			iptables_bin="$candidate"
+			break
+		fi
+	done
+
+	if [ -n "$iptables_bin" ]; then
+		"$iptables_bin" -C FORWARD -i "$bridge" -o "$bridge" -j ACCEPT >/dev/null 2>&1 ||
+			"$iptables_bin" -I FORWARD 1 -i "$bridge" -o "$bridge" -j ACCEPT || true
+	fi
+}
+
 write_rollback() {
 	local path="/tmp/istoreos-bridge-rollback-${bridge}.sh"
 	{
@@ -60,6 +76,7 @@ check_ifname "$bridge"
 
 if [ "$test_only" = 1 ]; then
 	ensure_bridge
+	ensure_bridge_forwarding
 	ip addr show dev "$bridge" | grep -q 'inet ' || ip addr add 10.90.0.1/24 dev "$bridge"
 	echo "bridge=$bridge"
 	exit 0
@@ -99,6 +116,7 @@ ip addr flush dev "$parent"
 ip link set "$parent" master "$bridge"
 ip link set "$parent" up
 ip link set "$bridge" up
+ensure_bridge_forwarding
 
 echo "bridge=$bridge"
 echo "parent=$parent"
